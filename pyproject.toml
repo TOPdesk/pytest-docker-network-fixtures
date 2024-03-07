@@ -1,0 +1,32 @@
+[project]
+name = "pytest-docker-network-fixtures"
+version = "0.1.0"
+description = "A Pytest based Docker testing library"
+authors = [
+    { name = "grainednoise", email = "grainednoise@gmail.com" }
+]
+dependencies = [
+    "docker>=7.0.0",
+    "requests>=2.31.0",
+    "requests-toolbelt>=1.0.0",
+    "pytest>=8.0.2",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[project.scripts]
+delete_test_networks = "pytest_docker_network_fixtures:delete_test_networks"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pytest_docker_network_fixtures"]
