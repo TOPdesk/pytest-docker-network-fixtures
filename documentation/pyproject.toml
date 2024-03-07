@@ -1,0 +1,33 @@
+[project]
+name = "documentation"
+version = "0.1.0"
+description = ""
+authors = [
+    { name = "grainednoise", email = "grainednoise@gmail.com" }
+]
+dependencies = [
+    "sphinx>=7.1.2",
+    "myst-parser>=2.0.0",
+    "sphinx-rtd-theme>=2.0.0",
+    "sphinx-needs>=2.0.0",
+    "sphinxcontrib-mermaid>=0.9.2",
+    "sphinx-design>=0.5.0",
+    "sphinx-last-updated-by-git>=0.3.6",
+    "sphinxcontrib.plantuml>=0.28",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+#[build-system]
+#requires = ["hatchling"]
+#build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+#[tool.hatch.metadata]
+#allow-direct-references = true
+#
+#[tool.hatch.build.targets.wheel]
+#packages = ["src/documentation"]
