@@ -14,6 +14,7 @@
 
 # noinspection PyUnresolvedReferences
 import sys
+
 # noinspection PyUnresolvedReferences
 import os
 
@@ -28,16 +29,16 @@ import os
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-needs_sphinx = '7.0'
+needs_sphinx = "7.0"
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.todo',
-    'sphinx.ext.imgmath',
-    'sphinx.ext.ifconfig',
-    'sphinx.ext.viewcode',
+    "sphinx.ext.todo",
+    "sphinx.ext.imgmath",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.viewcode",
     # 'sphinxcontrib.blockdiag',
     # 'sphinxcontrib.seqdiag',
     # 'sphinxcontrib.httpdomain',
@@ -58,50 +59,71 @@ myst_enable_extensions = [
     "html_image",
     "html_admonition",
     "fieldlist",
-
 ]
 
 needs_extra_options = ["reason"]
 
-needs_types = [dict(directive="req", title="Requirement", prefix="R_", color="#BFD8D2", style="node"),
-               dict(directive="spec", title="Specification", prefix="S_", color="#FEDCD2", style="node"),
-               dict(directive="impl", title="Implementation", prefix="I_", color="#DF744A", style="node"),
-               dict(directive="test", title="Test Case", prefix="T_", color="#DCB239", style="node"),
-               dict(directive="adr", title="Architecture Decision Record", prefix="ADR_", color="#DCB239",
-                    style="node"),
-               # Kept for backwards compatibility
-               dict(directive="need", title="Need", prefix="N_", color="#9856a5", style="node")
-               ]
+needs_types = [
+    dict(
+        directive="req", title="Requirement", prefix="R_", color="#BFD8D2", style="node"
+    ),
+    dict(
+        directive="spec",
+        title="Specification",
+        prefix="S_",
+        color="#FEDCD2",
+        style="node",
+    ),
+    dict(
+        directive="impl",
+        title="Implementation",
+        prefix="I_",
+        color="#DF744A",
+        style="node",
+    ),
+    dict(
+        directive="test", title="Test Case", prefix="T_", color="#DCB239", style="node"
+    ),
+    dict(
+        directive="adr",
+        title="Architecture Decision Record",
+        prefix="ADR_",
+        color="#DCB239",
+        style="node",
+    ),
+    # Kept for backwards compatibility
+    dict(directive="need", title="Need", prefix="N_", color="#9856a5", style="node"),
+]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 
 source_suffix = {
-    '.rst': 'restructuredtext',
-    '.md': 'markdown',
+    ".rst": "restructuredtext",
+    ".md": "markdown",
 }
 
 # The encoding of source files.
 # source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
-project = 'Pytest Docker Network Fixtures'
+project = "Pytest Docker Network Fixtures"
 # noinspection PyShadowingNames
-copyright = '2024'
-author = 'Docker Testing Team'
+copyright = "2024"
+author = "Docker Testing Team"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-version = u'v1-x'
+version = "v1-x"
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -138,7 +160,7 @@ exclude_patterns = []
 # show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # A list of ignored prefixes for module index sorting.
 # modindex_common_prefix = []
@@ -153,7 +175,7 @@ todo_include_todos = True
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 
 # For now, due to a problem with Sphinx 7.x,
 # html_theme = 'alabaster'    #See: https://github.com/readthedocs/sphinx_rtd_theme/issues/1463
@@ -248,20 +270,17 @@ html_static_path = []
 # html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'CloudflareDnsUpdaterdoc'
+htmlhelp_basename = "CloudflareDnsUpdaterdoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     # 'papersize': 'letterpaper',
-
     # The font size ('10pt', '11pt' or '12pt').
     # 'pointsize': '10pt',
-
     # Additional stuff for the LaTeX preamble.
     # 'preamble': '',
-
     # Latex figure (float) alignment
     # 'figure_align': 'htbp',
 }
@@ -270,8 +289,13 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'pytest-docker-network-fixtures.tex', 'Pytest Docker Network Fixtures',
-     'Docker Testing Team', 'manual'),
+    (
+        master_doc,
+        "pytest-docker-network-fixtures.tex",
+        "Pytest Docker Network Fixtures",
+        "Docker Testing Team",
+        "manual",
+    ),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -300,8 +324,13 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'pytest-docker-network-fixtures', 'Pytest Docker Network Fixtures Documentation',
-     [author], 1)
+    (
+        master_doc,
+        "pytest-docker-network-fixtures",
+        "Pytest Docker Network Fixtures Documentation",
+        [author],
+        1,
+    )
 ]
 
 # If true, show URL addresses after external links.
@@ -314,9 +343,15 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Pytest Docker Network Fixtures', 'Pytest Docker Network Fixtures Documentation',
-     author, 'Pytest Docker Network Fixtures', 'Running Docker containers in Pytest tests',
-     'Miscellaneous'),
+    (
+        master_doc,
+        "Pytest Docker Network Fixtures",
+        "Pytest Docker Network Fixtures Documentation",
+        author,
+        "Pytest Docker Network Fixtures",
+        "Running Docker containers in Pytest tests",
+        "Miscellaneous",
+    ),
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -378,7 +413,7 @@ epub_copyright = copyright
 # epub_post_files = []
 
 # A list of files that should not be packed into the epub file.
-epub_exclude_files = ['search.html']
+epub_exclude_files = ["search.html"]
 
 # The depth of the table of contents in toc.ncx.
 # epub_tocdepth = 3
@@ -402,7 +437,7 @@ epub_exclude_files = ['search.html']
 # epub_use_index = True
 
 # Fontpath for seqdiag (truetype font)
-seqdiag_fontpath = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'  # This is the only truetype font in the container!
+seqdiag_fontpath = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"  # This is the only truetype font in the container!
 seqdiag_antialias = True
 
 # Fontpath for blockdiag (truetype font)
