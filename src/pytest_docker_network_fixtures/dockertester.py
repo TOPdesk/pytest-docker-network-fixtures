@@ -182,7 +182,7 @@ class DockerImageManager(ABC):
         ...
 
 
-class DockerTester(object):
+class DockerTester:
     def __init__(
         self,
         image_manager: DockerImageManager,
@@ -198,7 +198,6 @@ class DockerTester(object):
         self._docker_port = docker_port
         self._virtual_domain = virtual_domain
         self.runid = str(uuid.uuid4())
-        # self.client = DockerClient("http://{}:{}".format(docker_host, docker_port), version=version)
         self.client = docker.from_env(version=version)
         self._owned_containers: Dict[str, Container] = {}
         self._updated_images = defaultdict(set)
