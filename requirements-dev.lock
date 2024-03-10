@@ -12,6 +12,8 @@ certifi==2024.2.2
     # via requests
 charset-normalizer==3.3.2
     # via requests
+dnspython==2.6.1
+    # via pymongo
 docker==7.0.0
     # via pytest-docker-network-fixtures
 exceptiongroup==1.2.0
@@ -25,6 +27,7 @@ packaging==23.2
     # via pytest
 pluggy==1.4.0
     # via pytest
+pymongo==4.6.2
 pytest==8.0.2
     # via pytest-docker-network-fixtures
 requests==2.31.0

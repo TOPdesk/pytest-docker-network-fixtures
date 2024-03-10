@@ -8,11 +8,14 @@ from pytest_docker_network_fixtures.dockertester import (
     TestContainerMixin,
     ManagedContainer,
 )
-from pytest_docker_network_fixtures.fixtures import (
+
+from pytest_docker_network_fixtures.core_fixtures import (
     DefaultDockerImageManager,
-    DefaultDockertestConfig,
+    BaseDockertesterConfig,
 )
-from pytest_docker_network_fixtures.fixtures import dockertest
+# Fixtures
+from pytest_docker_network_fixtures.core_fixtures import dockertester
+from pytest_docker_network_fixtures.databases import mongodb
 
 
 class DockerTesterMock:
@@ -51,13 +54,48 @@ def docker_image_manager():
 
 
 @pytest.fixture(scope="session")
-def dockertest_config():
-    class TestDockertestConfig(DefaultDockertestConfig):
+def dockertester_config():
+    class TestDockertesterConfig(BaseDockertesterConfig):
         virtual_domain = "mydomain.loc"
 
-    yield TestDockertestConfig()
+    yield TestDockertesterConfig()
 
 
-def test_fixture_override(dockertest):
-    assert dockertest.image_manager.get_docker_registry() == "my-registry"
-    assert dockertest._virtual_domain == "mydomain.loc"
+def test_fixture_override(dockertester):
+    assert dockertester.image_manager.get_docker_registry() == "my-registry"
+    assert dockertester._virtual_domain == "mydomain.loc"
+
+
+def get_environment_override(request, service: str):
+    marker = request.node.get_closest_marker(f"environment_{service}")
+    if marker is None:
+        return {}
+    else:
+        return marker.kwargs
+
+
+@pytest.fixture
+def my_service(request):
+    env = {"CI": "false"}
+    env.update(get_environment_override(request, "my_service"))
+    yield env
+
+
+@pytest.mark.environment_my_service(CI="true")
+def test_fixt(my_service):
+    assert my_service == {"CI": "true"}
+
+
+def test_fixt2(my_service):
+    assert my_service == {"CI": "false"}
+
+
+def test_mongodb(mongodb):
+    print(mongodb)
+    db = mongodb["test"]
+    first = db["first"]
+    print(first.insert_one({"name": "henk"}))
+    doc = first.find_one({"name": "henk"})
+    assert doc.pop("_id") is not None
+    assert doc == {"name": "henk"}
+

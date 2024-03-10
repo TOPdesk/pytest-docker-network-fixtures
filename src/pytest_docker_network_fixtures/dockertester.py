@@ -158,6 +158,9 @@ class ManagedContainer:
             suppress_empty_lines=suppress_empty_lines,
         )
 
+    def remove_container(self) -> None:
+        self.docker_tester.remove(self.container_id)
+
     def stop_container(self, timeout: int = 10):
         self.docker_tester.stop_container(self.container_id, timeout=timeout)
 
@@ -234,6 +237,8 @@ class DockerTester:
 
         image = self.image_manager.get_image(image, extend_image_name)
         image_tag = self.image_manager.get_image_tag(image_tag, change_image_tag)
+        if not image_tag:
+            image_tag = "latest"
 
         container_name = self._generate_container_name(service_name)
 
@@ -493,7 +498,6 @@ class DockerTester:
             return
 
         logs = container.logs().strip()
-
         print()
         print("=" * 30, "Started", name, "=" * 30)
         for line in logs.splitlines():

@@ -33,8 +33,15 @@ dependencies = [
     "requests-toolbelt>=1.0.0",
     "pytest>=8.0.2",
 ]
+
+
 readme = "README.md"
 requires-python = ">= 3.8"
+
+[project.optional-dependencies]
+mongodb = [
+    "pymongo>=4.0.0",
+]
 
 [project.scripts]
 delete_test_networks = "pytest_docker_network_fixtures.scripts.delete_test_networks:run"
@@ -50,7 +57,9 @@ build-backend = "hatchling.build"
 
 [tool.rye]
 managed = true
-dev-dependencies = []
+dev-dependencies = [
+    "pymongo>=4.0.0",
+]
 
 [tool.hatch.metadata]
 allow-direct-references = true
