@@ -7,7 +7,6 @@ import requests
 
 from pytest_docker_network_fixtures import (
     DockerStartTimeoutException,
-    TestContainerMixin,
 )
 from pytest_docker_network_fixtures.docker_services import UrlRequester
 from pytest_docker_network_fixtures.dockertester import ManagedContainer
@@ -43,65 +42,3 @@ def wait_for_web_service(
     raise DockerStartTimeoutException(
         "Timeout starting service '{}'".format(service_name)
     )
-
-
-try:
-    import pymssql
-
-    class MssqlTestContainer(TestContainerMixin):
-        def __init__(self, server: str, port: int, user: str, password: str):
-            self.server = server
-            self.port = port
-            self.user = user
-            self.password = password
-
-    def wait_for_mssql_available(
-        managed_container: ManagedContainer, internal_port, user, password
-    ):
-        host, port = managed_container.get_connectable_host_and_port(internal_port)
-
-        service_name = managed_container.get_service_name()
-
-        start_time = time.time()
-        conn = None
-        exception = ""
-
-        # added for GK-727: the pymssql.connect hangs indefinitely if done too early
-        time.sleep(10)
-
-        while time.time() < (start_time + 40):
-            # noinspection PyBroadException
-            try:
-                conn = pymssql.connect(
-                    server=host,
-                    port=port,
-                    user=user,
-                    password=password,
-                    database="master",
-                )
-                with conn.cursor(as_dict=False) as cursor:
-                    cursor.execute("SELECT 1;")
-                    print(
-                        f"Database came online in {time.time() - start_time:2.2f} seconds"
-                    )
-
-                manager = MssqlTestContainer(host, port, user, password)
-                manager.initialize_container_manager(managed_container)
-                return manager
-
-            except Exception as exc:
-                exception = str(exc)
-
-            finally:
-                if conn is not None:
-                    conn.close()
-                conn = None
-
-            time.sleep(0.7)
-
-        raise DockerStartTimeoutException(
-            "Timeout starting service '{}: {}'".format(service_name, exception)
-        )
-
-except ImportError:
-    pass
