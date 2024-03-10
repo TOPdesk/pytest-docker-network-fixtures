@@ -57,7 +57,8 @@ def dockertester_config():
 
 @pytest.fixture(scope="session")
 def dockertester(
-        dockertester_config: BaseDockertesterConfig, docker_image_manager: DockerImageManager
+    dockertester_config: BaseDockertesterConfig,
+    docker_image_manager: DockerImageManager,
 ):
     print("Instantiating DockerTester")
     docker_host = os.getenv("DOCKERTESTHOST", "localhost")
@@ -87,7 +88,9 @@ def dockertester(
         client.remove_all()
 
 
-def get_environment_with_overrides(request, service: str, **kwargs: Dict[str, str]) -> Dict[str, str]:
+def get_environment_with_overrides(
+    request, service: str, **kwargs: str
+) -> Dict[str, str]:
     """A utility function to return environment variables to be inserted into the docker
     container. If a `@pytest.mark.environment_<fixture name>` added to the test,
     these additions will override the keyword arguments passed to this function, allowing

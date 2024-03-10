@@ -141,9 +141,19 @@ class ManagedContainer:
             self.container_id, internal_port
         )
 
-    def base_url_for_container(self, internal_port: int, protocol: str = "http"):
+    def base_url_for_container(
+        self,
+        internal_port: int,
+        protocol: str = "http",
+        user: str | None = None,
+        password: str | None = None,
+    ):
         return self.docker_tester.base_url_for_container(
-            self.container_id, internal_port, protocol=protocol
+            self.container_id,
+            internal_port,
+            protocol=protocol,
+            user=user,
+            password=password,
         )
 
     def get_logs(self) -> str:
@@ -511,11 +521,23 @@ class DockerTester:
         self._container_log_dumped.add(container_id)
 
     def base_url_for_container(
-        self, container_id: str, internal_port: int, protocol="http"
+        self,
+        container_id: str,
+        internal_port: int,
+        protocol="http",
+        user: str | None = None,
+        password: str | None = None,
     ):
         self._assert_container(container_id)
         host, port = self.get_connectable_host_and_port(container_id, internal_port)
-        return f"{protocol}://{host}:{port}"
+
+        if user is None:
+            return f"{protocol}://{host}:{port}"
+
+        if password is None:
+            return f"{protocol}://{user}@{host}:{port}"
+
+        return f"{protocol}://{user}:{password}@{host}:{port}"
 
     def inspect_container(self, name_or_id) -> Dict[str, Any]:
         """Return the internal inspect data for a container

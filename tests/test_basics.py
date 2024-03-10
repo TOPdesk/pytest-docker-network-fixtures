@@ -13,9 +13,10 @@ from pytest_docker_network_fixtures.core_fixtures import (
     DefaultDockerImageManager,
     BaseDockertesterConfig,
 )
+
 # Fixtures
 from pytest_docker_network_fixtures.core_fixtures import dockertester
-from pytest_docker_network_fixtures.databases import mongodb
+from pytest_docker_network_fixtures.databases import mongodb, postgres
 
 
 class DockerTesterMock:
@@ -88,14 +89,3 @@ def test_fixt(my_service):
 
 def test_fixt2(my_service):
     assert my_service == {"CI": "false"}
-
-
-def test_mongodb(mongodb):
-    print(mongodb)
-    db = mongodb["test"]
-    first = db["first"]
-    print(first.insert_one({"name": "henk"}))
-    doc = first.find_one({"name": "henk"})
-    assert doc.pop("_id") is not None
-    assert doc == {"name": "henk"}
-

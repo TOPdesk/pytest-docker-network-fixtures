@@ -8,6 +8,8 @@
 #   with-sources: false
 
 -e file:.
+backports-zoneinfo==0.2.1
+    # via psycopg
 certifi==2024.2.2
     # via requests
 charset-normalizer==3.3.2
@@ -27,6 +29,10 @@ packaging==23.2
     # via pytest
 pluggy==1.4.0
     # via pytest
+psycopg==3.1.18
+    # via psycopg
+psycopg-binary==3.1.18
+    # via psycopg
 pymongo==4.6.2
 pytest==8.0.2
     # via pytest-docker-network-fixtures
@@ -38,6 +44,8 @@ requests-toolbelt==1.0.0
     # via pytest-docker-network-fixtures
 tomli==2.0.1
     # via pytest
+typing-extensions==4.10.0
+    # via psycopg
 urllib3==2.2.1
     # via docker
     # via requests

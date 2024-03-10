@@ -1,7 +1,10 @@
-
 # Fixtures
 # noinspection PyUnresolvedReferences
-from pytest_docker_network_fixtures.core_fixtures import dockertester, dockertester_config, docker_image_manager
+from pytest_docker_network_fixtures.core_fixtures import (
+    dockertester,
+    dockertester_config,
+    docker_image_manager,
+)
 from pytest_docker_network_fixtures.databases import mongodb, postgres
 
 
@@ -20,17 +23,17 @@ def test_postgres(postgres):
 
     with postgres.connection.cursor() as cur:
         # Execute a command: this creates a new table
-        cur.execute("""
+        cur.execute(
+            """
               CREATE TABLE first (
                   id serial PRIMARY KEY,
                   name text)
-              """)
+              """
+        )
 
         # Pass data to fill a query placeholders and let Psycopg perform
         # the correct conversion (no SQL injections!)
-        cur.execute(
-            "INSERT INTO first (name) VALUES (%s)",
-            ("henk",))
+        cur.execute("INSERT INTO first (name) VALUES (%s)", ("henk",))
 
         # Query the database and obtain data as Python objects.
         cur.execute("SELECT id, name FROM first")
