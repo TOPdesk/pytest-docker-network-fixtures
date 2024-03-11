@@ -27,6 +27,8 @@ pluggy==1.4.0
     # via pytest
 pytest==8.0.2
     # via pytest-docker-network-fixtures
+pyyaml==6.0.1
+    # via pytest-docker-network-fixtures
 requests==2.31.0
     # via docker
     # via pytest-docker-network-fixtures

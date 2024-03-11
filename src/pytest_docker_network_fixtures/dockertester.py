@@ -242,6 +242,7 @@ class DockerTester:
         extend_image_name=False,
         change_image_tag=False,
         mounts=None,
+        command=None,
     ):
         assert ":" not in image, "Image may not contain a tag"
 
@@ -276,6 +277,9 @@ class DockerTester:
             "publish_all_ports": True,
             "detach": True,
         }
+
+        if command:
+            config["command"] = command
 
         if isinstance(ports, dict):
             config["ports"] = ports

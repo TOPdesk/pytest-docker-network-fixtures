@@ -37,6 +37,8 @@ pymongo==4.6.2
 pymssql==2.2.11
 pytest==8.0.2
     # via pytest-docker-network-fixtures
+pyyaml==6.0.1
+    # via pytest-docker-network-fixtures
 requests==2.31.0
     # via docker
     # via pytest-docker-network-fixtures
