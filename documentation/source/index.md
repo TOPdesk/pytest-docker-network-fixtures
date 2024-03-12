@@ -13,6 +13,7 @@ maxdepth: 2
 
 intro
 core-concepts
+tutorials
 todo-items
 ```
 
