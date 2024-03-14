@@ -24,7 +24,7 @@ import os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-# sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath("../../src"))
 
 # -- General configuration ------------------------------------------------
 
@@ -35,6 +35,8 @@ needs_sphinx = "7.0"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.todo",
     "sphinx.ext.imgmath",
     "sphinx.ext.ifconfig",
@@ -49,6 +51,8 @@ extensions = [
     "sphinx_last_updated_by_git",
     "sphinx_needs",
 ]
+
+autosummary_generate = True
 
 myst_enable_extensions = [
     "deflist",

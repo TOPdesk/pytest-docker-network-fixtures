@@ -1,15 +1,10 @@
-# Welcome to the Pytest Docker Network Fixtures Tutorials!
-
-
-Contents:
-
-## Tutorials
-
+# Tutorials
 
 ```{toctree}
 ---
 maxdepth: 2
 ---
-
+create-a-fixture
+wire-it-up
 fake-services
 ```

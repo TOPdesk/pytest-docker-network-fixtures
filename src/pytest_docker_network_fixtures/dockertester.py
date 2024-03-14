@@ -124,13 +124,20 @@ def parse_routing_table() -> Optional[List[RoutingTableEntry]]:
 
 @dataclass(frozen=True)
 class ManagedContainer:
+    """A convenience wrapper for a container as produced by the DockerTester.launch_container() method.
+    It has properties for getting the DockerTester object and the container ID.
+    All methods are proxies for methods of the same name in the DockerTester object.
+    """
+
     weak_docker_tester: weakref.ref
     container_id: str
+    """The container ID of this container"""
 
     @property
     def docker_tester(self) -> DockerTester:
+        """The DockerTester object that created this container"""
         tester = self.weak_docker_tester()
-        assert tester is not None, "Dockertester reference has been garbage collected"
+        assert tester is not None, "DockerTester reference has been garbage collected"
         return tester
 
     def get_service_name(self) -> str:
@@ -196,19 +203,28 @@ class DockerImageManager(ABC):
 
 
 class DockerTester:
+    """Manages the entire Docker set-up for your test.
+
+    :param image_manager:
+    :param basename: the name that is pre-pended to everything created by this class. This is
+           helpful when containers and networks aren't cleaned up properly in the teardown: a
+           `docker ps` or `docker network list` will help you spot them more easily.
+    :param docker_host: ???
+    :param virtual_domain:
+    :param version: the Docker version. Not terribly useful, will disappear soon.
+    """
+
     def __init__(
         self,
         image_manager: DockerImageManager,
         basename: str,
         docker_host: str,
-        docker_port: int = 2375,
         virtual_domain: str = "test.loc",
         version: str | None = None,
     ):
         self.image_manager = image_manager
         self.basename = basename
         self._docker_host = docker_host
-        self._docker_port = docker_port
         self._virtual_domain = virtual_domain
         self.runid = str(uuid.uuid4())
         self.client = docker.from_env(version=version)
@@ -498,7 +514,7 @@ class DockerTester:
         only_once: bool = True,
         suppress_empty_lines: bool = False,
     ):
-        """Dump the container logs to stdout in a format that makes it easier to
+        """Dump the container logs to stdout in a format that makes it easy to
         ascertain the source of the logs.
 
         :param container_id: the container to dump logs from
@@ -528,10 +544,32 @@ class DockerTester:
         self,
         container_id: str,
         internal_port: int,
-        protocol="http",
+        protocol: str = "http",
         user: str | None = None,
         password: str | None = None,
-    ):
+    ) -> str:
+        """Find host & port that can be used to connect to a container and port
+        from the test code, and construct a standard URL out of it.
+
+        :param container_id: The container ID
+        :type container_id: str
+
+        :param internal_port: the container port from *within* Docker network
+        :type internal_port: int
+
+        :param protocol: the protocol for the URL, defaults to "http"
+        :type protocol: str
+
+        :param user: the username, or None
+        :type user: str | None
+
+        :param password: the password for the given user, or None.
+               This parameter is ignored if either the user is not supplied, or None.
+        :type password: str | None
+
+        :returns: the URL
+        :rtype: str
+        """
         self._assert_container(container_id)
         host, port = self.get_connectable_host_and_port(container_id, internal_port)
 
@@ -556,7 +594,7 @@ class DockerTester:
         """Return the internal IP-address of a container as exposed to the default internal bridging
         network in Docker.
         Do not use this to find a way to connect to a container from test code, use
-        `get_connectable_host_and_port()` instead, even though this _might_ work.
+        `get_connectable_host_and_port()` instead, even though this *might* work.
 
         :param name_or_id: the name of the service, or the container id
         :return: the IP-address
