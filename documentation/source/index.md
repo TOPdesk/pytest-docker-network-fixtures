@@ -13,6 +13,7 @@ maxdepth: 2
 
 intro
 core-concepts
+docker-image-management
 tutorials
 code
 todo-items
