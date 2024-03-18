@@ -7,11 +7,12 @@ from .dockertester import (
 )
 
 from .core_fixtures import (
-    DefaultDockerImageManager,
     docker_image_manager,
     BaseDockertesterConfig,
     dockertester_config,
 )
+
+from .images import DockerImageManager, DockerImage
 
 
 def delete_test_networks():

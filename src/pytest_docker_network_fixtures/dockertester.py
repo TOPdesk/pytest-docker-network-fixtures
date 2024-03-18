@@ -4,7 +4,6 @@ import os
 import uuid
 import ipaddress
 import weakref
-from abc import ABC, abstractmethod
 from typing import Optional, Dict, Any, Tuple, Union, List, Set
 from dataclasses import dataclass
 from ipaddress import IPv4Address, IPv6Address, IPv4Network, IPv6Network
@@ -17,6 +16,12 @@ from pathlib import Path
 
 import docker
 from docker.models.containers import Container
+
+from pytest_docker_network_fixtures.images import (
+    DockerImageManager,
+    DockerImage,
+    docker_image,
+)
 
 _docker_registry: str | None = os.getenv("DOCKER_REGISTRY")
 
@@ -188,20 +193,6 @@ class ManagedContainer:
         return self.docker_tester.inspect_container(self.container_id)
 
 
-class DockerImageManager(ABC):
-    @abstractmethod
-    def get_image(self, image: str, extend_image_name: bool) -> str:
-        ...
-
-    @abstractmethod
-    def get_image_tag(self, image_tag: str, change_image_tag: bool) -> str:
-        ...
-
-    @abstractmethod
-    def get_docker_registry(self) -> str:
-        ...
-
-
 class DockerTester:
     """Manages the entire Docker set-up for your test.
 
@@ -229,8 +220,7 @@ class DockerTester:
         self.runid = str(uuid.uuid4())
         self.client = docker.from_env(version=version)
         self._owned_containers: Dict[str, Container] = {}
-        self._updated_images = defaultdict(set)
-        self.update_images = False
+        self._updated_images = set()
         self._services: Dict[str, str] = {}
         self._container_log_dumped: Set[str] = set()
         self._default_network = self.client.networks.create(
@@ -248,24 +238,19 @@ class DockerTester:
 
     def launch_container(
         self,
-        image,
+        image: DockerImage | str,
         service_name,
         additional_dns_names=(),
-        image_tag=None,
         ports=None,
         environment=None,
-        force_pull=False,
-        extend_image_name=False,
-        change_image_tag=False,
         mounts=None,
         command=None,
     ):
-        assert ":" not in image, "Image may not contain a tag"
+        if isinstance(image, str):
+            image = docker_image(image)
 
-        image = self.image_manager.get_image(image, extend_image_name)
-        image_tag = self.image_manager.get_image_tag(image_tag, change_image_tag)
-        if not image_tag:
-            image_tag = "latest"
+        if not image.use_local and not image.image_tag:
+            image = image.with_image_tag("latest")
 
         container_name = self._generate_container_name(service_name)
 
@@ -275,20 +260,18 @@ class DockerTester:
             print("removing container ", container.id)
             container.remove(force=True)
 
-        if (self.update_images or force_pull) and image_tag not in self._updated_images[
-            image
-        ]:
-            print(f"Attempting to update docker image {image}:{image_tag}")
-            image_obj = self.client.images.pull(image, tag=image_tag)
+        if not image.use_local and image not in self._updated_images:
+            print(f"Attempting to update docker image {image.full_name}")
+            image_obj = self.client.images.pull(image.tagless_name, tag=image.image_tag)
             print(image_obj)
-            self._updated_images[image].add(image_tag)
+            self._updated_images.add(image)
 
         print(self._default_network.name)
 
         config = {
             "name": container_name,
             "hostname": service_name,
-            "image": f"{image}:{image_tag}" if image_tag else image,
+            "image": image.full_name,
             "network": None,  # Will be connected after creation
             "publish_all_ports": True,
             "detach": True,
@@ -350,12 +333,6 @@ class DockerTester:
                 return container_id
 
         return None
-
-    def get_image(self, image, extend_image_name):
-        if not extend_image_name:
-            return image
-
-        return f"{get_docker_registry()}/{image}"
 
     def _assert_container(self, container_id) -> Container:
         assert (

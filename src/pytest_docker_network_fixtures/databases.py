@@ -12,6 +12,7 @@ from pytest_docker_network_fixtures.dockertester import (
     TestContainerMixin,
     ManagedContainer,
 )
+from pytest_docker_network_fixtures.images import docker_image
 
 # Fixtures
 # noinspection PyUnresolvedReferences
@@ -29,12 +30,10 @@ try:
         environment = get_environment_with_overrides(request, "mongodb")
         internal_port = 27017
         managed_container = dockertester.launch_container(
-            "mongo",
+            docker_image("mongo"),
             "mongodb",
-            image_tag=None,
             environment=environment,
             ports=[internal_port],
-            force_pull=True,
         )
 
         service_name = managed_container.get_service_name()
@@ -101,12 +100,10 @@ try:
 
         internal_port = 5432
         managed_container = dockertester.launch_container(
+            docker_image("postgres"),
             "postgres",
-            "postgres",
-            image_tag=None,
             environment=environment,
             ports=[internal_port],
-            force_pull=True,
         )
 
         service_name = managed_container.get_service_name()
@@ -232,12 +229,10 @@ try:
 
         internal_port = 1433
         managed_container = dockertester.launch_container(
-            "mcr.microsoft.com/mssql/server",
+            docker_image("mcr.microsoft.com/mssql/server:2019-latest"),
             "sql-server-2019",
-            image_tag="2019-latest",
             environment=environment,
             ports=[internal_port],
-            force_pull=True,
         )
 
         try:

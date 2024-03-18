@@ -18,6 +18,7 @@ from pytest_docker_network_fixtures.dockertester import (
     TestContainerMixin,
     ManagedContainer,
 )
+from pytest_docker_network_fixtures.images import docker_image
 
 
 @dataclass
@@ -63,12 +64,10 @@ def victoria_metrics(request, dockertester: DockerTester, scrape_config: ScrapeC
             print(yaml.dump(scrape_config.as_dict()))
 
         managed_container = dockertester.launch_container(
-            "victoriametrics/victoria-metrics",
+            docker_image("victoriametrics/victoria-metrics"),
             "victoriametrics",
-            image_tag=None,
             environment=environment,
             ports=[internal_port],
-            force_pull=True,
             command="-promscrape.config=/vm/config.yml",
             mounts=[(tempdir, Path("vm"))],
         )

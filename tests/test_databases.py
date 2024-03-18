@@ -44,32 +44,6 @@ def test_postgres(postgres):
         postgres.connection.commit()
 
 
-def test_postgres(postgres):
-    print(postgres)
-
-    with postgres.connection.cursor() as cur:
-        # Execute a command: this creates a new table
-        cur.execute(
-            """
-              CREATE TABLE first (
-                  id serial PRIMARY KEY,
-                  name text)
-              """
-        )
-
-        # Pass data to fill a query placeholders and let Psycopg perform
-        # the correct conversion (no SQL injections!)
-        cur.execute("INSERT INTO first (name) VALUES (%s)", ("henk",))
-
-        # Query the database and obtain data as Python objects.
-        cur.execute("SELECT id, name FROM first")
-        data = cur.fetchone()
-        assert isinstance(data[0], int)
-        assert data[1] == "henk"
-
-        postgres.connection.commit()
-
-
 def test_mssql_2019(mssql_2019):
     print(mssql_2019)
     conn = mssql_2019.connect("master")
