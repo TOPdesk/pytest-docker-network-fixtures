@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 import re
 from dataclasses import dataclass
+from typing import Dict, Final
 
 _image_re = re.compile(
     r"^((?P<docker_registry>.*)/)?(?P<image_name>[a-z0-9-_.]+)(:(?P<image_tag>[a-z0-9-_.]+))?$"
@@ -117,30 +118,107 @@ def docker_image(full_name: str, use_local=False) -> DockerImage:
     return DockerImage.from_name(full_name, use_local=use_local)
 
 
+@dataclass
+class DockerRegistry:
+    name: str
+    registry: str | None
+    default_tag: str | None = None
+    username: str | None = None
+    password: str | None = None
+
+    def image(self, image_name: str, use_local: bool = False) -> DockerImage:
+        image = docker_image(image_name, use_local)
+        if image.docker_registry is None:
+            image = image.with_docker_registry(self.registry)
+
+        elif image.docker_registry != self.registry:
+            raise ValueError(
+                f"Mismatched docker registries: {image.docker_registry} != {self.registry}"
+            )
+
+        if self.default_tag is not None and image.image_tag is None:
+            image = image.with_image_tag(self.default_tag)
+
+        return image
+
+    @staticmethod
+    def from_env(name: str) -> DockerRegistry | None:
+        registry = os.getenv("DOCKERREGISTRY", None)
+        if registry is None:
+            return None
+
+        username = os.getenv("DOCKERLOGINUSER", None)
+        password = None
+
+        if username is not None:
+            password = os.getenv("DOCKERLOGINPASS", None)
+            if password is None:
+                raise ValueError("Can't login without password")
+
+        return DockerRegistry(name, registry, username, password)
+
+
+PUBLIC_DOCKER_REGISTRY_NAME: Final[str] = "public"
+BUILD_DOCKER_REGISTRY_NAME: Final[str] = "build"
+
+
 class DockerImageManager:
-    def get_docker_registry(self) -> str | None:
-        return os.getenv("DOCKER_REGISTRY")
+    registries_by_name: Dict[str, DockerRegistry]
+    registries_by_registry: Dict[str, DockerRegistry]
 
-    def get_image(self, image: str, extend_image_name):
-        if not extend_image_name or self.get_docker_registry() is None:
-            return image
+    def __init__(self):
+        self.registries_by_name = {}
+        self.registries_by_registry = {}
 
-        return f"{self.get_docker_registry()}/{image}"
+    def registries(self):
+        for registry in self.registries_by_registry.values():
+            yield registry
 
-    def get_image_tag(self, image_tag: str, change_image_tag: bool) -> str:
-        if not change_image_tag:
-            return image_tag
+    def add_registry(self, registry: DockerRegistry):
+        if registry.name in self.registries_by_name:
+            raise ValueError(f"A registry with name '{registry.name}' already exists")
 
-        ci_commit_ref_name = os.getenv("CI_COMMIT_REF_NAME", None)
-        if ci_commit_ref_name == "master" or ci_commit_ref_name == "main":
-            commit_short_sha = os.getenv("CI_COMMIT_SHORT_SHA", None)
-            return commit_short_sha if commit_short_sha else image_tag
-        else:
-            ci_commit_ref_no_underscores = os.getenv(
-                "CI_COMMIT_REF_NO_UNDERSCORES", None
+        if registry.registry in self.registries_by_registry:
+            raise ValueError(
+                f"A registry with registry '{registry.registry}' already exists"
             )
-            return (
-                f"{ci_commit_ref_no_underscores}-snapshot"
-                if ci_commit_ref_no_underscores
-                else image_tag
-            )
+
+        self.registries_by_name[registry.name] = registry
+        self.registries_by_registry[registry.registry] = registry
+
+    def __getitem__(self, item):
+        return self.registries_by_name[item]
+
+    @property
+    def public(self) -> DockerRegistry:
+        registry = self.registries_by_name.get(PUBLIC_DOCKER_REGISTRY_NAME)
+        if registry is None:
+            raise Exception(f"Public registry not present")
+
+        return registry
+
+    @property
+    def build(self) -> DockerRegistry:
+        registry = self.registries_by_name.get(BUILD_DOCKER_REGISTRY_NAME)
+        if registry is None:
+            raise Exception(f"Build registry not present")
+
+        return registry
+
+    # def get_image_tag(self, image_tag: str, change_image_tag: bool) -> str:
+    #     if not change_image_tag:
+    #         return image_tag
+
+    # ci_commit_ref_name = os.getenv("CI_COMMIT_REF_NAME", None)
+    # if ci_commit_ref_name == "master" or ci_commit_ref_name == "main":
+    #     commit_short_sha = os.getenv("CI_COMMIT_SHORT_SHA", None)
+    #     return commit_short_sha if commit_short_sha else image_tag
+    # else:
+    #     ci_commit_ref_no_underscores = os.getenv(
+    #         "CI_COMMIT_REF_NO_UNDERSCORES", None
+    #     )
+    #     return (
+    #         f"{ci_commit_ref_no_underscores}-snapshot"
+    #         if ci_commit_ref_no_underscores
+    #         else image_tag
+    #     )

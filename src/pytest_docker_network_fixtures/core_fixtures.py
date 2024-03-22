@@ -7,12 +7,24 @@ from typing import Dict
 import pytest
 
 from pytest_docker_network_fixtures import DockerTester
-from pytest_docker_network_fixtures.images import DockerImageManager
+from pytest_docker_network_fixtures.images import (
+    DockerImageManager,
+    DockerRegistry,
+    PUBLIC_DOCKER_REGISTRY_NAME,
+    BUILD_DOCKER_REGISTRY_NAME,
+)
 
 
 @pytest.fixture(scope="session")
 def docker_image_manager():
-    yield DockerImageManager()
+    manager = DockerImageManager()
+    manager.add_registry(
+        DockerRegistry(PUBLIC_DOCKER_REGISTRY_NAME, "docker.io", "latest")
+    )
+    manager.add_registry(
+        DockerRegistry(BUILD_DOCKER_REGISTRY_NAME, "my-registry.loc")
+    )  # This is an example
+    yield manager
 
 
 @dataclass(frozen=True)
