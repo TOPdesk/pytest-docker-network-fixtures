@@ -8,7 +8,7 @@ import pytest
 
 from pytest_docker_network_fixtures import DockerTester
 from pytest_docker_network_fixtures.images import (
-    DockerImageManager,
+    DockerRegistryManager,
     DockerRegistry,
     PUBLIC_DOCKER_REGISTRY_NAME,
     BUILD_DOCKER_REGISTRY_NAME,
@@ -16,8 +16,8 @@ from pytest_docker_network_fixtures.images import (
 
 
 @pytest.fixture(scope="session")
-def docker_image_manager():
-    manager = DockerImageManager()
+def docker_registry_manager():
+    manager = DockerRegistryManager()
     manager.add_registry(
         DockerRegistry(PUBLIC_DOCKER_REGISTRY_NAME, "docker.io", "latest")
     )
@@ -41,13 +41,13 @@ def dockertester_config():
 @pytest.fixture(scope="session")
 def dockertester(
     dockertester_config: BaseDockertesterConfig,
-    docker_image_manager: DockerImageManager,
+        docker_registry_manager: DockerRegistryManager,
 ):
     print("Instantiating DockerTester")
     docker_host = os.getenv("DOCKERTESTHOST", "localhost")
     docker_version = os.getenv("DOCKERTESTVERSION", None)
     client = DockerTester(
-        docker_image_manager,
+        docker_registry_manager,
         dockertester_config.basename,
         docker_host,
         virtual_domain=dockertester_config.virtual_domain,

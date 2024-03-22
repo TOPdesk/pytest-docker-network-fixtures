@@ -92,7 +92,7 @@ from pytest_docker_network_fixtures.docker_services import UrlRequester
 from pytest_docker_network_fixtures.core_fixtures import (
     dockertester,
     dockertester_config,
-    docker_image_manager,
+    docker_registry_manager,
 )
 
 

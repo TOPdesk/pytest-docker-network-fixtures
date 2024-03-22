@@ -18,7 +18,7 @@ import docker
 from docker.models.containers import Container
 
 from pytest_docker_network_fixtures.images import (
-    DockerImageManager,
+    DockerRegistryManager,
     DockerImage,
     docker_image,
 )
@@ -196,7 +196,7 @@ class ManagedContainer:
 class DockerTester:
     """Manages the entire Docker set-up for your test.
 
-    :param image_manager:
+    :param registry_manager:
     :param basename: the name that is pre-pended to everything created by this class. This is
            helpful when containers and networks aren't cleaned up properly in the teardown: a
            `docker ps` or `docker network list` will help you spot them more easily.
@@ -207,13 +207,13 @@ class DockerTester:
 
     def __init__(
         self,
-        image_manager: DockerImageManager,
+        registry_manager: DockerRegistryManager,
         basename: str,
         docker_host: str,
         virtual_domain: str = "test.loc",
         version: str | None = None,
     ):
-        self.image_manager = image_manager
+        self.registry_manager = registry_manager
         self.basename = basename
         self._docker_host = docker_host
         self._virtual_domain = virtual_domain

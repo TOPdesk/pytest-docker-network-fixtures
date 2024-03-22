@@ -82,10 +82,10 @@ class DockerImage:
         """Return a DockerImage from a docker image name
 
         :param full_name: The docker image name
-        :type full_name str
+        :type full_name: str
 
         :param use_local: flag to indicate whether you want a locally
-          present docker image, or a remote one. Defaults to `False`
+               present docker image, or a remote one. Defaults to `False`
         :type use_local: bool
 
         :returns: a DockerImage
@@ -104,10 +104,10 @@ def docker_image(full_name: str, use_local=False) -> DockerImage:
     """Return a DockerImage from a docker image name
 
     :param full_name: The docker image name
-    :type full_name str
+    :type full_name: str
 
     :param use_local: flag to indicate whether you want a locally
-          present docker image, or a remote one. Defaults to `False`
+           present docker image, or a remote one. Defaults to `False`
     :type use_local: bool
 
     :returns: a DockerImage
@@ -162,7 +162,7 @@ PUBLIC_DOCKER_REGISTRY_NAME: Final[str] = "public"
 BUILD_DOCKER_REGISTRY_NAME: Final[str] = "build"
 
 
-class DockerImageManager:
+class DockerRegistryManager:
     registries_by_name: Dict[str, DockerRegistry]
     registries_by_registry: Dict[str, DockerRegistry]
 

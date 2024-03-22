@@ -45,3 +45,4 @@ And there may be some weird corner cases. One example would be where you're work
 two projects at the same time, and you use the images produced in the one project in 
 the tests of the other. You might not need to do that all that often, but having that 
 workflow be available as an option can definitely be a nice time saver.
+

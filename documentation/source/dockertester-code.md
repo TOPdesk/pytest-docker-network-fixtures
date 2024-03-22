@@ -6,12 +6,6 @@
    :members:
 ```
 
-
-```{eval-rst}
-.. autoclass:: pytest_docker_network_fixtures.dockertester.DockerImageManager
-   :members:
-```
-
 ```{eval-rst}
 .. autoclass:: pytest_docker_network_fixtures.dockertester.ManagedContainer
    :members:

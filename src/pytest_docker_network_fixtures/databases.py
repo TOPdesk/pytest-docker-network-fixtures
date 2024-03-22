@@ -30,7 +30,7 @@ try:
         environment = get_environment_with_overrides(request, "mongodb")
         internal_port = 27017
         managed_container = dockertester.launch_container(
-            dockertester.image_manager.public.image("mongo"),
+            dockertester.registry_manager.public.image("mongo"),
             "mongodb",
             environment=environment,
             ports=[internal_port],
@@ -100,7 +100,7 @@ try:
 
         internal_port = 5432
         managed_container = dockertester.launch_container(
-            dockertester.image_manager.public.image("postgres"),
+            dockertester.registry_manager.public.image("postgres"),
             "postgres",
             environment=environment,
             ports=[internal_port],

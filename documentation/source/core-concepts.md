@@ -22,7 +22,7 @@ from pytest_docker_network_fixtures import DockerTester
 from pytest_docker_network_fixtures import (
     dockertester,
     dockertester_config,
-    docker_image_manager)
+    docker_registry_manager)
 
 
 def test_example(dockertester: DockerTester):

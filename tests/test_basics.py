@@ -4,7 +4,7 @@ import weakref
 
 import pytest
 
-from pytest_docker_network_fixtures import DockerImageManager
+from pytest_docker_network_fixtures import DockerRegistryManager
 from pytest_docker_network_fixtures.dockertester import (
     TestContainerMixin,
     ManagedContainer,
@@ -46,8 +46,8 @@ def test_container_mixin():
 
 
 @pytest.fixture(scope="session")
-def docker_image_manager():
-    result = DockerImageManager()
+def docker_registry_manager():
+    result = DockerRegistryManager()
     result.added_property = "prop"
     yield result
 
@@ -61,7 +61,7 @@ def dockertester_config():
 
 
 def test_fixture_override(dockertester):
-    assert dockertester.image_manager.added_property == "prop"
+    assert dockertester.registry_manager.added_property == "prop"
     assert dockertester._virtual_domain == "mydomain.loc"
 
 
