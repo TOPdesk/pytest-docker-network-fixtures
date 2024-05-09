@@ -98,6 +98,8 @@ try:
         password = environment["POSTGRES_PASSWORD"]
         database = environment["POSTGRES_DB"]
 
+        # See: https://gajus.com/blog/setting-up-postgre-sql-for-running-integration-tests
+
         internal_port = 5432
         managed_container = dockertester.launch_container(
             dockertester.registry_manager.public.image("postgres"),

@@ -8,6 +8,7 @@
 #   with-sources: false
 
 -e file:.
+amqp==5.2.0
 backports-zoneinfo==0.2.1
     # via psycopg
 certifi==2024.2.2
@@ -52,3 +53,5 @@ typing-extensions==4.10.0
 urllib3==2.2.1
     # via docker
     # via requests
+vine==5.1.0
+    # via amqp

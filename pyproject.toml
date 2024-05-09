@@ -49,6 +49,9 @@ postgres = [
 mssql = [
     "pymssql>=2.2.0",
 ]
+rabbitmq = [
+    "amqp>=5.2.0"
+]
 
 [project.scripts]
 delete_test_networks = "pytest_docker_network_fixtures.scripts.delete_test_networks:run"
@@ -68,6 +71,7 @@ dev-dependencies = [
     "pymongo>=4.0.0",
     "psycopg[binary]>=3.0",
     "pymssql>=2.2.0",
+    "amqp>=5.2.0"
 ]
 
 [tool.hatch.metadata]

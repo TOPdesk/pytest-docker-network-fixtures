@@ -41,7 +41,7 @@ def dockertester_config():
 @pytest.fixture(scope="session")
 def dockertester(
     dockertester_config: BaseDockertesterConfig,
-        docker_registry_manager: DockerRegistryManager,
+    docker_registry_manager: DockerRegistryManager,
 ):
     print("Instantiating DockerTester")
     docker_host = os.getenv("DOCKERTESTHOST", "localhost")
