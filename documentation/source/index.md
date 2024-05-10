@@ -14,6 +14,7 @@ maxdepth: 2
 intro
 core-concepts
 docker-image-management
+pre-built-fixtures
 tutorials
 code
 todo-items
