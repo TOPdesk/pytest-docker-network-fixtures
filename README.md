@@ -20,6 +20,6 @@ easier to configure and run for different projects. As such, consider this to be
 
 ## Contributing?
 
-In its current state, code contributions seem a bit premature
+In its current state, code contributions seem a bit premature.
 
 
