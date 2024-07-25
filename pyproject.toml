@@ -3,7 +3,8 @@ name = "pytest-docker-network-fixtures"
 version = "0.1.0"
 description = "A Pytest based Docker testing library"
 authors = [
-    { name = "grainednoise", email = "grainednoise@gmail.com" }
+    { name = "grainednoise", email = "grainednoise@gmail.com" },
+    { name = "bvdbasch", email = "git@vanderbasch.com" }
 ]
 
 keywords = ["docker", "pytest", "fixtures", "testing", "integration-testing"]
@@ -37,7 +38,7 @@ dependencies = [
 
 
 readme = "README.md"
-requires-python = ">= 3.8"
+requires-python = ">= 3.11"
 
 [project.optional-dependencies]
 mongodb = [
