@@ -83,6 +83,6 @@ def get_environment_with_overrides(
     marker = request.node.get_closest_marker(f"environment_{service}")
 
     if marker is not None:
-        result.update(marker)
+        result.update(marker.kwargs)
 
     return result
