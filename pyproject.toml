@@ -4,7 +4,8 @@ version = "0.1.0"
 description = "A Pytest based Docker testing library"
 authors = [
     { name = "grainednoise", email = "grainednoise@gmail.com" },
-    { name = "bvdbasch", email = "git@vanderbasch.com" }
+    { name = "bvdbasch", email = "git@vanderbasch.com" },
+    { name = "koeleco", email = "koeleco@tutamail.com" }
 ]
 
 keywords = ["docker", "pytest", "fixtures", "testing", "integration-testing"]

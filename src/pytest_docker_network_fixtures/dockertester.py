@@ -577,9 +577,23 @@ class DockerTester:
         :return: the IP-address
         """
         container_id = self.find_id(name_or_id)
-        return self.client.api.inspect_container(container_id)["NetworkSettings"][
-            "IPAddress"
-        ]
+        network_settings = self.client.api.inspect_container(container_id)["NetworkSettings"]
+
+        # Docker v28 and older: IPAddress is at the top level
+        ip_address: str | None = network_settings.get("IPAddress")
+        if ip_address:
+            return ip_address
+
+        # Docker v29+: Networks -> `bridge` network -> IPAddress
+        networks = network_settings.get("Networks")
+        if networks:
+            if "bridge" in networks:
+                bridge_ip: str | None = networks["bridge"].get("IPAddress")
+                if bridge_ip:
+                    return bridge_ip
+
+        raise Exception(f"Could not resolve internal IP for container {name_or_id}")
+
 
     def resolve_custom_bridge_network_ip(self, name_or_id):
         """Return the internal IP-address of a container as exposed to the custom internal
