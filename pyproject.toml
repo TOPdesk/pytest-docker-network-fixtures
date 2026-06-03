@@ -1,6 +1,6 @@
 [project]
 name = "pytest-docker-network-fixtures"
-version = "0.1.0"
+version = "0.2.0"
 description = "A Pytest based Docker testing library"
 authors = [
     { name = "grainednoise", email = "grainednoise@gmail.com" },
