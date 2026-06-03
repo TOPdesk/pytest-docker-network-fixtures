@@ -81,3 +81,8 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pytest_docker_network_fixtures"]
+
+[tool.pytest.ini_options]
+markers = [
+    "environment_my_service: set environment variables for my_service container",
+]
